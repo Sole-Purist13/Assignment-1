@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <title>Assignment 1</title>
+    
+
+  </head>
+    
+  <body>
+  <!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>My ArcGIS JS Web Map</title>
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+
+    <!-- ArcGIS JS CSS -->
+    <link rel="stylesheet" href="https://js.arcgis.com/4.29/esri/themes/light/main.css" />
+    
+    <style>
+      html, body {
+        padding: 0px;
+        margin: 0px;
+        height: 100%;
+        width: 100%;
+        /*overflow-y: hidden;*/
+      }
+      
+      #viewDiv {
+        height: 93%;
+        width: 100%;
+      }
+      
+      p, .header {
+        padding: 5px;
+        margin: 0px;
+        background: rgb(168, 184, 20);
+        font-weight: bold;
+      }
+      
+      .esri-sketch__panel {
+        width: 25vw;
+      }
+      
+      .esri-component.esri-distance-measurement-2d.esri-widget.esri-widget--panel {
+        width: 175px;
+      }
+      .esri-distance-measurement-2d__clear-button {
+        width: 150px;
+      }
+    </style>
+
+    <!-- ArcGIS JS -->
+    <script src="https://js.arcgis.com/4.29/"></script>
+
+  </head>
+  <body>
+    <div class="header">
+      <p>Assignment 1 - Coding, Customization, and Publishing</p>
+    </div>
+    
+    <div id="viewDiv"></div>
+
+    <script>
+      require([
+        "esri/Map",
+        "esri/views/MapView",
+        "esri/layers/GraphicsLayer",
+        "esri/Graphic",
+        "esri/widgets/Sketch",
+        "esri/widgets/Home",
+        "esri/widgets/BasemapGallery",
+        "esri/widgets/Expand",
+        "esri/widgets/Search",
+        "esri/widgets/Measurement",
+        "esri/widgets/DistanceMeasurement2D",
+        "esri/widgets/ScaleBar",
+      ], function (Map, MapView, GraphicsLayer, Graphic, Sketch, Home, BasemapGallery, Expand, Search, Measurement, DistanceMeasurement2D, ScaleBar,) {
+        
+        // 1. Create the map
+        const map = new Map({
+          basemap: "streets-navigation-vector"
+        });
+
+        // 2. Create the view
+        const view = new MapView({
+          container: "viewDiv",
+          map: map,
+          center: [-79.798, 43.324], // example: Waterloo-ish
+          zoom: 10
+        });
+               
+        // 3. Graphics layer for Sketch
+        const graphicsLayer = new GraphicsLayer();
+        map.add(graphicsLayer);
+
+        // 4. Sketch widget
+        const sketch = new Sketch({
+          view: view,
+          width: 10,
+          layer: graphicsLayer
+        });
+        const sketchExpand = new Expand({
+          expandIcon: "pencil-mark",  
+          view: view,
+          content: sketch
+        });
+        view.ui.add(sketchExpand, "top-right");
+
+
+        // 5. Home widget
+        const homeWidget = new Home({
+          view: view
+        });
+        view.ui.add(homeWidget, "top-left");
+      
+        // 6. Basemap widget
+        const basemapGallery = new BasemapGallery({
+          view: view
+        });
+        const galleryExpand = new Expand({
+          expandIconClass: "esri-icon-basemap",  
+          view: view,
+          content: basemapGallery
+        });
+        view.ui.add(galleryExpand, "bottom-left");
+        
+        // 7. Search widget
+        const searchWidget = new Search({
+          view: view
+        });
+        view.ui.add(searchWidget, {
+          position: "top-left",
+          index: 0
+        });
+              
+        // 9. Distance widget
+        const distWidget = new DistanceMeasurement2D({
+          view: view
+        });
+        
+        const expandDistanceWidget = new Expand({
+          view: view,
+          content: distWidget,
+          expandIcon: "measure", 
+          expandTooltip: "Measure Distance" 
+        });
+        view.ui.add(expandDistanceWidget, "top-right");
+        
+        // 10. Scale bar widget
+        const scaleWidget = new ScaleBar({
+          view: view
+        });
+        view.ui.add(scaleWidget, "bottom-right");
+        
+        // 11. Point geometry
+        var point = {
+          type: "point",
+          longitude: -79.798305,
+          latitude: 43.325976,
+        };
+
+        var simpleMarkerSymbol = {
+          type: "simple-marker",
+          style: "path",
+          path: "M16,3.5c-4.142,0-7.5,3.358-7.5,7.5c0,4.143,7.5,18.121,7.5,18.121S23.5,15.143,23.5,11C23.5,6.858,20.143,3.5,16,3.5z M16,14.584c-1.979,0-3.584-1.604-3.584-3.584S14.021,7.416,16,7.416S19.584,9.021,19.584,11S17.979,14.584,16,14.584z",
+          size: 30,
+          color: [35, 185, 194], // orange
+          outline: {
+            color: [255, 255, 255], // white
+            width: 1,
+          },
+        };
+
+        var pointGraphic = new Graphic({
+          geometry: point,
+          symbol: simpleMarkerSymbol
+        });
+
+        graphicsLayer.add(pointGraphic);
+      });
+    </script>
+  </body>
+</html>
+    
+  </body>
+  
+</html>
